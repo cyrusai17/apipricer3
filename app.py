@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 import pandas as pd
 import os
 from datetime import datetime
@@ -46,6 +46,38 @@ def get_pricing():
     pricing_data = get_latest_pricing_data()
     if pricing_data:
         return jsonify(pricing_data)
+    return jsonify({'error': 'No pricing data available'}), 404
+
+@app.route('/api/pricing/<provider>')
+def get_provider_pricing(provider):
+    """API endpoint to get pricing data for a specific provider."""
+    pricing_data = get_latest_pricing_data()
+    if pricing_data:
+        # Filter data for the requested provider
+        provider_data = [item for item in pricing_data['data'] if item['Provider'].lower() == provider.lower()]
+        if provider_data:
+            return jsonify({
+                'date': pricing_data['date'],
+                'provider': provider,
+                'data': provider_data
+            })
+        return jsonify({'error': f'No data available for provider: {provider}'}), 404
+    return jsonify({'error': 'No pricing data available'}), 404
+
+@app.route('/api/pricing/model/<model_name>')
+def get_model_pricing(model_name):
+    """API endpoint to get pricing data for a specific model."""
+    pricing_data = get_latest_pricing_data()
+    if pricing_data:
+        # Filter data for the requested model
+        model_data = [item for item in pricing_data['data'] if model_name.lower() in item['Model Name'].lower()]
+        if model_data:
+            return jsonify({
+                'date': pricing_data['date'],
+                'model': model_name,
+                'data': model_data
+            })
+        return jsonify({'error': f'No data available for model: {model_name}'}), 404
     return jsonify({'error': 'No pricing data available'}), 404
 
 if __name__ == '__main__':

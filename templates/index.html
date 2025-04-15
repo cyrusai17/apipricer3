@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Pricing Monitor</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .provider-card {
+            transition: transform 0.2s;
+        }
+        .provider-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">LLM Pricing Monitor</h1>
+            <p class="text-gray-600">Latest pricing data as of {{ pricing_data.date if pricing_data else 'No data available' }}</p>
+        </header>
+
+        {% if pricing_data %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for provider in pricing_data.data | groupby('Provider') %}
+            <div class="provider-card bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">{{ provider.grouper }}</h2>
+                <div class="space-y-4">
+                    {% for model in provider.list %}
+                    <div class="border-b border-gray-200 pb-4 last:border-b-0">
+                        <h3 class="text-lg font-medium text-gray-700">{{ model['Model Name'] }}</h3>
+                        <div class="mt-2 grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Input (per 1K tokens)</p>
+                                <p class="text-lg font-semibold text-gray-800">${{ model['Price per 1K tokens (input)'] }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Output (per 1K tokens)</p>
+                                <p class="text-lg font-semibold text-gray-800">${{ model['Price per 1K tokens (output)'] }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-12">
+            <p class="text-gray-600">No pricing data available. Please run the pricing monitor script to generate data.</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html> 

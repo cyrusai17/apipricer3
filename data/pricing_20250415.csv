@@ -1,0 +1,12 @@
+Provider,Model Name,Price per 1K tokens (input),Price per 1K tokens (output),Units (USD)
+OpenAI,GPT-4,0.03,0.06,USD
+OpenAI,GPT-3.5 Turbo,0.0015,0.002,USD
+OpenAI,GPT-4 Turbo,0.01,0.03,USD
+Anthropic,Claude 3 Opus,0.015,0.075,USD
+Anthropic,Claude 3 Sonnet,0.003,0.015,USD
+Anthropic,Claude 3 Haiku,0.00025,0.00125,USD
+Mistral,Mistral Small,0.0002,0.0002,USD
+Mistral,Mistral Medium,0.00027,0.00027,USD
+Mistral,Mistral Large,0.0007,0.0007,USD
+Mistral,Mixtral 8x7B,0.00024,0.00024,USD
+Mistral,Mixtral 8x22B,0.00065,0.00065,USD

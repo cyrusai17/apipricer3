@@ -22,7 +22,7 @@ client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 PROVIDERS = {
     'OpenAI': 'https://openai.com/pricing',
     'Anthropic': 'https://www.anthropic.com/pricing',
-    'DeepSeek': 'https://deepseek.com/pricing',
+    'DeepSeek': 'https://www.deepseek.com/pricing',
     'Xai': 'https://x.ai/pricing',
     'Gemini': 'https://ai.google.dev/pricing'
 }
@@ -49,8 +49,21 @@ def fetch_pricing_page(url):
         
         print(f"Fetching URL: {url}")
         response = requests.get(url, headers=HEADERS, timeout=10)
+        
+        # Log the response status code
+        print(f"Response status code: {response.status_code}")
+        
+        # Check if the response is successful
+        if response.status_code != 200:
+            print(f"Error: Received status code {response.status_code} for {url}")
+            return None
+            
         response.raise_for_status()
         print(f"Successfully fetched {url}")
+        
+        # Log the content length
+        print(f"Content length: {len(response.text)} characters")
+        
         return response.text
     except requests.RequestException as e:
         print(f"Error fetching {url}: {e}")

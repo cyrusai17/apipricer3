@@ -22,7 +22,9 @@ client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 PROVIDERS = {
     'OpenAI': 'https://openai.com/pricing',
     'Anthropic': 'https://www.anthropic.com/pricing',
-    'Mistral': 'https://mistral.ai/models/'  # Updated URL to models page
+    'DeepSeek': 'https://deepseek.com/pricing',
+    'Xai': 'https://x.ai/pricing',
+    'Gemini': 'https://ai.google.dev/pricing'
 }
 
 # Browser-like headers to avoid being blocked
@@ -174,14 +176,14 @@ Columns:
 - Price per 1K tokens (output)
 - Units (USD)
 
-For OpenAI models, look for specific pricing information like:
-- GPT-4: $0.03 per 1K input tokens, $0.06 per 1K output tokens
-- GPT-3.5 Turbo: $0.0015 per 1K input tokens, $0.002 per 1K output tokens
-- GPT-4 Turbo: $0.01 per 1K input tokens, $0.03 per 1K output tokens
+For OpenAI models, look for specific pricing information for these models:
+- GPT-4.1: Latest release
+- o3-mini
+- o1-pro
 
 If you find specific pricing information, include it. If not, mark as "Unavailable".
 Output only the table — no explanation."""
-    elif provider == 'Mistral':
+    elif provider == 'Anthropic':
         prompt = f"""You are an AI assistant. Extract a table in CSV format from the HTML of a pricing page for {provider}.
 
 Columns:
@@ -191,16 +193,13 @@ Columns:
 - Price per 1K tokens (output)
 - Units (USD)
 
-For Mistral models, look for specific pricing information like:
-- Mistral Small: $0.20 per 1M tokens (same for input and output)
-- Mistral Medium: $0.27 per 1M tokens (same for input and output)
-- Mistral Large: $0.70 per 1M tokens (same for input and output)
-- Mixtral 8x7B: $0.24 per 1M tokens (same for input and output)
-- Mixtral 8x22B: $0.65 per 1M tokens (same for input and output)
+For Anthropic models, look for specific pricing information for these models:
+- Claude 3.5 Sonnet
+- Claude 3.Haiku
 
-Important: For Mistral models, use the same price for both input and output tokens since they charge the same rate. If you find a price for a model, use that same price for both input and output columns.
+If you find specific pricing information, include it. If not, mark as "Not provided".
 Output only the table — no explanation."""
-    else:  # Anthropic
+    elif provider == 'DeepSeek':
         prompt = f"""You are an AI assistant. Extract a table in CSV format from the HTML of a pricing page for {provider}.
 
 Columns:
@@ -210,13 +209,53 @@ Columns:
 - Price per 1K tokens (output)
 - Units (USD)
 
-For Anthropic models, look for specific pricing information like:
-- Claude 3 Opus: $15 per 1M input tokens, $75 per 1M output tokens
-- Claude 3 Sonnet: $3 per 1M input tokens, $15 per 1M output tokens
-- Claude 3 Haiku: $0.25 per 1M input tokens, $1.25 per 1M output tokens
+For DeepSeek models, look for specific pricing information for these models:
+- v3
+- r1
 
-Important: Make sure to extract both input and output pricing separately. If you find a model's pricing, you must include both input and output prices. If you can't find a specific price, mark it as "Not provided".
+If you find specific pricing information, include it. If not, mark as "Not provided".
 Output only the table — no explanation."""
+    elif provider == 'Xai':
+        prompt = f"""You are an AI assistant. Extract a table in CSV format from the HTML of a pricing page for {provider}.
+
+Columns:
+- Provider
+- Model Name
+- Price per 1K tokens (input)
+- Price per 1K tokens (output)
+- Units (USD)
+
+For Xai models, look for specific pricing information for this model:
+- grok
+
+If you find specific pricing information, include it. If not, mark as "Not provided".
+Output only the table — no explanation."""
+    elif provider == 'Gemini':
+        prompt = f"""You are an AI assistant. Extract a table in CSV format from the HTML of a pricing page for {provider}.
+
+Columns:
+- Provider
+- Model Name
+- Price per 1K tokens (input)
+- Price per 1K tokens (output)
+- Units (USD)
+
+For Gemini models, look for specific pricing information for this model:
+- 2.5-pro
+
+If you find specific pricing information, include it. If not, mark as "Not provided".
+Output only the table — no explanation."""
+    else:
+        prompt = f"""You are an AI assistant. Extract a table in CSV format from the HTML of a pricing page for {provider}.
+
+Columns:
+- Provider
+- Model Name
+- Price per 1K tokens (input)
+- Price per 1K tokens (output)
+- Units (USD)
+
+Output only the table — no explanation. If you can't find specific pricing information, mark as "Not provided"."""
 
     try:
         print(f"Sending content to GPT-4 for {provider}")
